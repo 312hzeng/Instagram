@@ -13,10 +13,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.FileProvider
-import com.parse.FindCallback
-import com.parse.ParseException
-import com.parse.ParseQuery
-import com.parse.ParseUser
+import com.parse.*
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -38,10 +35,16 @@ class MainActivity : AppCompatActivity() {
             //send post to server without images
             val description = findViewById<EditText>(R.id.et_description).text.toString()
             val user = ParseUser.getCurrentUser()
-            submitPost(description, user)
+            if(photoFile != null){
+                submitPost(description, user, photoFile!!)
+            }else{
+                //print error
+                Log.e(TAG, "fail at taking picture")
+            }
         }
         findViewById<Button>(R.id.btn_takePicture).setOnClickListener(){
             //launch camera to take picture
+            onLaunchCamera()
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -102,10 +105,11 @@ class MainActivity : AppCompatActivity() {
         return File(mediaStorageDir.path + File.separator + fileName)
     }
 
-    fun submitPost(description: String, user: ParseUser) {
+    fun submitPost(description: String, user: ParseUser, file: File) {
         val post = Post()
         post.setDescription(description)
         post.setUser(user)
+        post.setImage(ParseFile(file))
         post.saveInBackground{ exception->
             if(exception != null){
                 Log.e(TAG, "error while saving post")
