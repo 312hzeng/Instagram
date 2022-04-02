@@ -1,5 +1,6 @@
 package com.example.instagram
 
+import android.content.ClipData
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -13,6 +14,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.parse.*
 import java.io.File
 
@@ -45,6 +47,22 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_takePicture).setOnClickListener(){
             //launch camera to take picture
             onLaunchCamera()
+        }
+        findViewById<BottomNavigationView>(R.id.action_home).setOnItemSelectedListener{
+            item ->
+            when(item.itemId){
+                R.id.action_home-> {
+                    //navigate to home screen
+                }
+                R.id.action_compose-> {
+                    //navigate to compose
+                }
+                R.id.action_profile-> {
+                    //navigate to profile
+                }
+            }
+            //handle user interaction on the item
+            true
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
